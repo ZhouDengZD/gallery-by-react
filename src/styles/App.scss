@@ -12,6 +12,7 @@ html,body{
   position: relative;
   width: 100%;
   height: 680px;
+  overflow: hidden;
 }
 // stage--end
 
@@ -20,8 +21,62 @@ html,body{
   position: relative;
   width: 100%;
   height: 100%;
-  overflow: hidden;
   background-color: #ddd;
+  perspective: 1800px;//值越大3d旋转效果越好（加给父元素的）
+
+  //@at-root作用:最终生成css时，将代码提到结构最外层（避免css代码过深造成的性能问题，可移植性问题）
+  @at-root{
+    //图片是240*240
+    .img-figure{
+      width: 320px;
+      height: 360px;
+      margin: 0;
+      padding: 40px;
+      background-color: #fff;
+      //定位
+      position: absolute;
+
+      box-sizing: border-box;  //width的值包含padding
+      cursor: pointer;
+      transform-origin: 0 50% 0;//x,y,z三轴的变换原点（此时是以左边框翻转向左翻转整张图片）
+      transform-style: preserve-3d; //3d变换效果（主要针对rotateY(180deg)）
+      transition: transform .6s ease-in-out,left .6s ease-in-out, top .6s ease-in-out;
+      //transform以及改变图片盒子的top、left值时有一个六秒动画
+
+      &.is-inverse{
+        transform:translate(320px) rotateY(180deg);
+        //translate(320px)取消了上面原点将图片左移320px的影响
+      }
+    }
+    figcaption{
+      text-align: center;
+      .img-title{
+        margin: 20px 0 0;
+        color: #a7a0a2;
+        font-size: 12px;
+      }
+      .img-back{
+        position: absolute;
+        left: 0;
+        top: 0;
+
+        width: 100%;
+        height: 100%;
+        padding: 50px 40px;
+        overflow: auto;
+
+        color:#a7a0a2;
+        font-size: 22px;
+        line-height: 1.25;
+        text-align: center;
+        background-color:#fff;
+        box-sizing: border-box;
+        transform: rotateY(180deg);
+        backface-visibility: hidden;
+      }
+    }
+  }
+
 }
 // image--end
 
