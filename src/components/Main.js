@@ -85,6 +85,39 @@ class ImgFigure extends React.Component {
   }
 }
 
+//控制组件
+class ControllerUnit extends React.Component{
+  constructor(){
+    super();
+    this.handleClick = this.handleClick.bind(this);
+  }
+  handleClick(e){
+    //如果点击的是当前正在选中态的按钮，则翻转图片，否则将对应图片居中
+    if(this.props.arrange.isCenter){
+      this.props.inverse();
+    }else{
+      this.props.center();
+    }
+    e.stopPropagation();
+    e.preventDefault();
+  }
+  render(){
+    let controllerUnitclassName = 'controller-unit';
+    //如果对应的是居中图片，显示控制按钮的居中态
+    if(this.props.arrange.isCenter){
+      controllerUnitclassName += ' is-center';
+      //如果同时对应的是翻转图片，显示控制按钮的翻转态
+      if(this.props.arrange.isInverse){
+        controllerUnitclassName += ' is-inverse';
+      }
+    }
+    return(
+      <span className={controllerUnitclassName} onClick={this.handleClick}></span>
+    );
+  }
+}
+
+//大管家组件
 class AppComponent extends React.Component {
   //AppComponent作为大管家掌控数据及数据的转换（图片定位控制、旋转控制、反面等）
   constructor(){
@@ -157,7 +190,7 @@ class AppComponent extends React.Component {
         vPosRangeX = vPosRange.x,
 
         imgsArrangeTopArr = [],
-        topImgNum = Math.ceil(Math.random() * 2),//上侧取1-0张图片
+        topImgNum = Math.floor(Math.random() * 2),//上侧取0-1张图片
 
         topImgSpliceIndex = 0,//记录上侧的这张图片是从数组那个位置拿出来的，初始化为0
         imgsArrangeCenterArr = imgsArrangeArr.splice(centerIndex,1);   // 存放居中图片的状态信息
@@ -275,6 +308,7 @@ class AppComponent extends React.Component {
       imgFigures.push(<ImgFigure data={value} ref={'imgFigure'+index} arrange={this.state.imgsArrangeArr[index]} inverse={this.inverse(index)} center={this.center(index)} key={index}/>)
       //value为单张图片数据,arrange将每张图片的状态信息传递给了ImgFigure组件
       //this.inserve(index)执行,返回一个闭包函数给inverse属性
+      controllerUnits.push(<ControllerUnit arrange={this.state.imgsArrangeArr[index]} inverse={this.inverse(index)} center={this.center(index)} key={index}/>);
     }); //将所有图片组件放入一个数组
 
   //控制每个图片组件的位置
