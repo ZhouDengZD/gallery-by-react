@@ -111,7 +111,7 @@ html,body{
 
       transform: scale(.5);//非“居中态(居中图片对应的按钮)”缩小到50%
 
-      transition: transform .6s ease-in-out, background-color .3s;//动画
+      transition: transform .6s ease-in-out, background-color .3s ease-in-out;//动画
 
       &.is-center{ //"居中态"按钮样式
         background-color: #888;
